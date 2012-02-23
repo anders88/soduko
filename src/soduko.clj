@@ -77,4 +77,18 @@
   (is (finished? [1 2 3]))
   )
 
+(with-test 
+  (defn solve [board size n]
+    "Solves it"
+    (if (finished? board) board
+      (for [value (legal-values board size n)
+            :let [next-step (replace-item board n value)]
+            ]
+        (solve next-step size (+ n 1))
+        )
+    )
+    )
+  (is (= [[1 2 2 1]] (solve [0 2 2 0] 2 0)))
+  )
+
 (run-tests)
