@@ -59,5 +59,13 @@
   (is (= [1 2 3 7 8] (sort (legal-values board 9 0))))
   (is (= [] (legal-values board 9 7)))
   )
+
+(with-test
+  (defn replace-item [board n new-value]
+    "Replaces an item with a new value"
+    (concat (take n board) [new-value] (drop (+ n 1) board)) 
+    )
+  (is (= [1 8 3 4] (replace-item [1 2 3 4] 1 8)))
+  )
   
 (run-tests)
