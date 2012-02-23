@@ -39,9 +39,25 @@
 
 (with-test
   (defn illegal-values [board size n]
+    "Finds the illegal values for the cell"
     (distinct (into (horizontal board size n) (vertical board size n)))
     )
   (is (= [0 4 5 6 9] (sort (illegal-values board 9 0))))
 )
+
+(with-test
+  (defn legal-values [board size n]
+    "Finds the legal values for a cell"
+    (if (zero? (board n))
+    (let [illegal (set (illegal-values board size n))]
+    
+    (filter #(not (contains? illegal %)) (range 1 (+ size 1)))
+    )
+    []
+    ))
+  
+  (is (= [1 2 3 7 8] (sort (legal-values board 9 0))))
+  (is (= [] (legal-values board 9 7)))
+  )
   
 (run-tests)
