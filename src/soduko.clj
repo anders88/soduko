@@ -67,5 +67,14 @@
     )
   (is (= [1 8 3 4] (replace-item [1 2 3 4] 1 8)))
   )
-  
+
+(with-test
+  (defn finished? [board]
+    "A finished board contains no zeroes"
+    (not (contains? (set board) 0))
+    )
+  (is (not (finished? board)))
+  (is (finished? [1 2 3]))
+  )
+
 (run-tests)
