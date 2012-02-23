@@ -37,5 +37,11 @@
   (is (= [0 0 8 5 4 0 0 0 0] (vertical board 9 10)))    
 )
 
-
+(with-test
+  (defn illegal-values [board size n]
+    (distinct (into (horizontal board size n) (vertical board size n)))
+    )
+  (is (= [0 4 5 6 9] (sort (illegal-values board 9 0))))
+)
+  
 (run-tests)
