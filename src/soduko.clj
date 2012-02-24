@@ -14,6 +14,17 @@
 5	0	0	6	4	0	0	0	0
 0 0 0 0 0 0 0 0 0
 ])
+
+(def default-problem
+  [3 0 0 0 0 5 0 1 0
+   0 7 0 0 0 6 0 3 0
+   1 0 0 0 9 0 0 0 0
+   7 0 8 0 0 0 0 9 0
+   9 0 0 4 0 8 0 0 2
+   0 6 0 0 0 0 5 0 1
+   0 0 0 0 4 0 0 0 6
+   0 4 0 7 0 0 0 2 0
+   0 2 0 6 0 0 0 0 3])
       
 (with-test
 (defn horizontal [board size n]
@@ -48,16 +59,13 @@
 (with-test
   (defn legal-values [board size n]
     "Finds the legal values for a cell"
-    (if (zero? ((vec board) n))
     (let [illegal (set (illegal-values board size n))]
     
     (filter #(not (contains? illegal %)) (range 1 (+ size 1)))
     )
-    [((vec board) n)]
-    ))
+    )
   
   (is (= [1 2 3 7 8] (sort (legal-values board 9 0))))
-  (is (= [4] (legal-values board 9 7)))
   )
 
 (with-test
@@ -77,18 +85,26 @@
   (is (finished? [1 2 3]))
   )
 
-(with-test 
-  (defn solve [board size n]
-    "Solves it"
-    (if (finished? board) board
-      (for [value (legal-values board size n)
-            :let [next-step (replace-item board n value)]
-            ]
-        (solve next-step size (+ n 1))
-        )
-    )
-    )
-  (is (= [[1 2 2 1]] (solve [0 2 2 0] 2 0)))
+(defn solved-it [board]
+  (println "Solved " board)
+  board
   )
 
-(run-tests)
+(with-test 
+  (defn solve [board size last-index]
+    "Solves it"
+    (if (not (.contains board 0))
+      (solved-it board)
+      (let [index (.indexOf board 0)]
+        (let [legals (legal-values board size index)]            
+        (if (= index last-index)
+          (throw (java.lang.RuntimeException. (str "Feiler " index " board " board)))
+        (flatten (map #(solve (assoc board index %) size index) (legal-values board size index)))
+        ))
+      )
+    )
+   )
+  (is (= [1 2 2 1] (solve [0 2 2 0] 2 999)))
+)
+
+(solve default-problem 9 999)
