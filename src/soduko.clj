@@ -19,7 +19,7 @@
 (defn horizontal [board size n]
   "Finds the horizontal line of the cell"
   (let [first-line (* size (int (/ n size)))]
-    (map #(board %) (range first-line (+ first-line size)))
+    (map #((vec board) %) (range first-line (+ first-line size)))
     )
 )
 
@@ -31,7 +31,7 @@
 (with-test 
   (defn vertical [board size n]
   "Finds the vertival column of the cell"
-  (map #(board (+ (rem n size) (* % size))) (range 0 size)))
+  (map #((vec board) (+ (rem n size) (* % size))) (range 0 size)))
   
   (is (= [2 4] (vertical [1 2 3 4] 2 1)))
   (is (= [0 0 8 5 4 0 0 0 0] (vertical board 9 10)))    
@@ -48,16 +48,16 @@
 (with-test
   (defn legal-values [board size n]
     "Finds the legal values for a cell"
-    (if (zero? (board n))
+    (if (zero? ((vec board) n))
     (let [illegal (set (illegal-values board size n))]
     
     (filter #(not (contains? illegal %)) (range 1 (+ size 1)))
     )
-    []
+    [((vec board) n)]
     ))
   
   (is (= [1 2 3 7 8] (sort (legal-values board 9 0))))
-  (is (= [] (legal-values board 9 7)))
+  (is (= [4] (legal-values board 9 7)))
   )
 
 (with-test
