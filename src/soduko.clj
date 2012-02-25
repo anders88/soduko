@@ -99,7 +99,7 @@
         (let [legals (legal-values board size index)]            
         (if (= index last-index)
           (throw (java.lang.RuntimeException. (str "Feiler " index " board " board)))
-        (flatten (map #(solve (assoc board index %) size index) (legal-values board size index)))
+        (first (flatten (map #(solve (assoc board index %) size index) (legal-values board size index))))
         ))
       )
     )
