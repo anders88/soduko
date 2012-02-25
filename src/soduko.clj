@@ -90,18 +90,21 @@
   board
   )
 
+(def finished (atom []))
+
 (with-test 
-  (defn solve [board size last-index]
+  (defn solve [board size]
     "Solves it"
-    (if (not (.contains board 0))
-      (solved-it board)
+    (cond
+      (not (empty? @finished)) []
+      (.contains board 0)
       (let [index (.indexOf board 0)]
         (let [legals (legal-values board size index)]            
-        (if (= index last-index)
-          (throw (java.lang.RuntimeException. (str "Feiler " index " board " board)))
-        (first (flatten (map #(solve (assoc board index %) size index) (legal-values board size index))))
-        ))
+        (flatten (map #(solve (assoc board index %) size) (legal-values board size index)))
+        )
       )
+      :else
+      (reset! finished board)
     )
    )
   (is (= [1 2 2 1] (solve [0 2 2 0] 2 999)))
